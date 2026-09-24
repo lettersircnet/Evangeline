@@ -16,7 +16,7 @@
 #define RP_REPEATS 3
 #define RP_SECONDS 60
 
-#define RP_KICKREASON "stop repeating"
+#define RP_KICKREASON S_KICK_FLOOD
 
 #define RP_BANREASON "multiple repeat floods"
 
@@ -39,7 +39,7 @@ const char *rp_exceptions[]={
 #define FL_LINES   8 
 #define FL_SECONDS 30
 
-#define FL_KICKREASON "stop flooding"
+#define FL_KICKREASON S_KICK_FLOOD
 
 #define FL_BANREASON "multiple floods"
 

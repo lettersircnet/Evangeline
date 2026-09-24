@@ -63,7 +63,7 @@ void hook_privmsg(const char *from, const char *to, const char *msg) {
             // check if the person is trying to kick either myself or a permanent owner
             if (o && ((o == ch->me) || (o->flags & HAS_X)) && !(u->flags & HAS_X)) { 
               // kick the user for being naughty
-              ch->kick(u,"Don't try it, fucker.");
+              ch->kick(u, S_KICK_PROTECT);
             // check if we are trying to kick someone we shouldnt..
             } else if (o && (o != u) && (!(o->flags & (HAS_E | HAS_O | HAS_H | HAS_S | HAS_L)) || ((u->flags & HAS_X) && !(o->flags & HAS_X)))) {
               // check if we are trying to kickban
@@ -101,4 +101,3 @@ extern "C" module *init() {
 
 extern "C" void destroy() {
 }
-

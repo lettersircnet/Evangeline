@@ -94,7 +94,7 @@ void hook_privmsg(const char *from, const char *to, const char *msg)
 	        {
 	            if(&i && !(i->flags & (IS_VOICE | VOICE_SENT | IS_OP | OP_SENT | HAS_V)))
 	            {
-			i->setReason("cleaning up");
+			i->setReason(S_KICK_MASS);
 			ch->toKick.sortAdd(i);
 	            }
 		    i++;

@@ -119,9 +119,9 @@ void hook_privmsg(const char *from, const char *to, const char *msg)
 	    //repeat
 	    else if( cdata && cdata->hit(msg))
 	    {
-		u->setReason("Do not repeat yourself!");
+		u->setReason(S_KICK_FLOOD);
 		ch->toKick.sortAdd(u);
-		ch->kick(u, "Do not repeat yourself!");
+		ch->kick(u, S_KICK_FLOOD);
 	    }
 	    
 	    

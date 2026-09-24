@@ -281,6 +281,15 @@
 #define S_COPYRIGHT2			"Copyright (C) 2026 Marco d'Angelo <marco@dangelo.mobi>"
 #define S_COPYRIGHT3			"Lineage: Evangeline 1.1.x by Arcain/[Xp-AvR], based on Eggdrop"
 
+/* Original Evangeline 1.1.4/Eggdrop kick messages.  \002 is IRC bold. */
+#define S_KICK_DEFAULT			"\002Evangeline\002: shit."
+#define S_KICK_BANNED			"\002Evangeline\002: You are banned."
+#define S_KICK_MASS				"\002Evangeline\002: mass kick, go sit in a corner"
+#define S_KICK_FLOOD			"\002Evangeline\002: flood"
+#define S_KICK_PROTECT			"don't kick my friends, bud"
+#define S_KICK_COMMENT			"...and don't come back."
+#define S_KICK_REQUESTED		"requested"
+
 #define DIE_REASON				"Taking the blue pill"
 #define DIE_REASON2				"told me to take the blue pill"
 

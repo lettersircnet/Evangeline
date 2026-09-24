@@ -446,9 +446,9 @@ CONFIG::CONFIG()
 	registerObject(userlist_file = entWord("userlist", 1, 255));	// = nick
 	registerObject(dontfork = entBool("dontfork", 0));
 	registerObject(keepnick = entBool("keepnick", 0));
-	registerObject(kickreason = entString("kickreason", 1, 255));
-	registerObject(limitreason = entString("limitreason", 1, 255));
-	registerObject(keepoutreason = entString("keepoutreason", 1, 255));
+	registerObject(kickreason = entString("kickreason", 1, 255, S_KICK_DEFAULT));
+	registerObject(limitreason = entString("limitreason", 1, 255, S_KICK_MASS));
+	registerObject(keepoutreason = entString("keepoutreason", 1, 255, S_KICK_BANNED));
 	registerObject(partreason = entString("partreason", 1, 255));
 	registerObject(quitreason = entString("quitreason", 1, 255));
 	registerObject(cyclereason = entString("cyclereason", 1, 255));
