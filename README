@@ -1,6 +1,14 @@
 Evangeline
 ==========
 
+        _/_/_/ _/  _/  _/_/   _/   _/ _/_/_/ _/_/_/ _/     _/ _/   _/ _/_/_/
+       _/     _/  _/ _/   _/ _//  _/ _/     _/     _/        _//  _/ _/
+      _/_/   _/  _/ _/_//_/ _//_/_/ _/_/_/ _/_/   _/     _/ _//_/_/ _/_/
+     _/     _/  _/ _/   _/ _/  /_/ _/  _/ _/     _/     _/ _/  /_/ _/
+    _/_/_/  _/_/  _/   _/ _/   _/ _/_/_/ _/_/_/ _/_/_/ _/ _/   _/ _/_/_/
+                   'MESS WITH THE BEST, DIE LIKE THE REST'
+
+
 Evangeline 1.1.5 (reborn) is a modern IRCNet-oriented C++ botnet project. It is
 a private research and operations fork of Psotnic that keeps the original
 partyline, encrypted botnet, channel protection, userlist replication, and
