@@ -1,0 +1,40 @@
+# Build output
+*.o
+*.so
+*.a
+*.la
+bin/
+make-hiddenseed
+hidden-seed-functions.c
+hidden-seed-functions.o
+config.h
+seed.h
+Makefile
+Makefile.debug
+Makefile.dynamic
+Makefile.static
+modules/Makefile
+modules/plog/Makefile
+tests/a.out
+
+# Local runtime state
+*.ul
+pid.*
+*.pid
+.irc-backtrace-*
+qrcode-otp.txt
+email-otp.txt
+fast-login.txt
+meteo.txt
+
+# Local encrypted/decrypted configs and keys
+conf.*
+*.dec
+server.key
+server.cert
+
+# Editor and OS noise
+*~
+*.swp
+*.swo
+.DS_Store
