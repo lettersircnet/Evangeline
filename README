@@ -1,0 +1,211 @@
+Evangeline
+==========
+
+Evangeline 1.1.5 (reborn) is a modern IRCNet-oriented C++ botnet project. It is
+a private research and operations fork of Psotnic that keeps the original
+partyline, encrypted botnet, channel protection, userlist replication, and
+module model, while rebuilding the code for current networks.
+
+The name follows the same idea that Evangeline once brought to Eggdrop years
+ago: take a proven IRC bot core, preserve what made it useful, and reshape it
+for the networks and operational style people actually use now.
+
+This fork credits the original Psotnic author Grzegorz Rusin and contributors,
+then adds the Evangeline work by Marco d'Angelo.
+
+See `EVANGELINE.md` for project background and direction.
+
+What changed
+------------
+
+- Rebranded runtime, partyline, build banner, and documentation to Evangeline
+  1.1.5 (reborn).
+- SSL is enabled by default for botnet and partyline links.
+- `listen` is now the SSL listener; separate `ssl_listen` configuration is no
+  longer needed for normal deployments.
+- IPv6 is first-class: `myipv6` makes listeners and IRC server selection
+  IPv6-only, skips IPv4 fallback, and supports IPv6 bot links.
+- Hostname server entries resolve according to the configured address family.
+- Botnet `hub` links use SSL by default without requiring an `ssl:` prefix.
+- Added automatic bot host registration for linked slave/leaf bots.
+- Added automatic self-host registration when a bot connects to IRC, so it can
+  join configured channels without manual owner intervention.
+- Added `.link-slave` and `.link-leaf` helpers to create bot handles,
+  passwords, flags, and pending IRC host auto-add state.
+- Added fast leaf fallback: leaf bots try their primary slave, then other known
+  slaves, then the hub as last resort, and return to the primary when it is
+  back.
+- Added `-n` fast hub bootstrap for first launch: ownerpass, owner handle, user
+  password, config encryption, user creation, and startup in one flow.
+- Improved IRCNet-oriented OP request and defensive timing while respecting IRC
+  mode limits such as three `+o` targets per MODE.
+- Improved build/configure output, default OpenSSL detection, and distro package
+  hints for Debian/Ubuntu, Fedora, and Arch.
+- Kept `make` and `make debug` as the main build targets.
+
+Build
+-----
+
+Run `./configure` once, then:
+
+```
+make
+make debug
+make install PREFIX=/opt/evangeline
+```
+
+Useful configure flags:
+
+```
+./configure
+./configure --with-ipv6
+./configure --disable-adns
+./configure --with-firedns
+```
+
+SSL is enabled by default. Use `./configure --without-ssl` only for a non-SSL
+legacy build.
+
+Package hints:
+
+```
+Debian/Ubuntu: build-essential libssl-dev
+Fedora:        gcc-c++ make openssl-devel
+Arch:          base-devel openssl
+```
+
+First hub bootstrap
+-------------------
+
+For a fresh hub, use `-n`:
+
+```
+./bin/evangeline -n conf.hub
+```
+
+It asks for:
+
+```
+Owner password
+Owner handle
+Owner user password
+```
+
+If the config is plaintext, Evangeline encrypts it, starts the hub, creates the
+owner, gives the owner partyline privileges, and leaves the hub ready for SSL
+partyline and bot links.
+
+Partyline
+---------
+
+Connect with an SSL-capable client to the hub listener:
+
+```
+openssl s_client -quiet -connect '[IPv6-or-host]:43917'
+```
+
+Normal owner login sequence:
+
+```
+PASS <ownerpass>
+NICK <handle>
+PASS <user-password>
+```
+
+Common commands:
+
+```
+.help
+.status
+.whois <handle>
+.mjoin #channel
+.channels
+.channels #channel
+.link-slave <bot-handle> <link-password>
+.link-leaf <bot-handle> <link-password>
+.save
+.quit
+```
+
+Config startup
+--------------
+
+`./bin/evangeline conf` now accepts either an encrypted config or a plaintext
+config. If `conf` is plaintext, Evangeline writes `conf.dec` as the backup,
+saves the encrypted `conf`, and continues startup in the same command.
+
+`./bin/evangeline -c conf` is still available as the legacy "encrypt and exit"
+mode.
+
+IPv6 botnet links
+-----------------
+
+Use `myipv6 ::` to make the botnet listener IPv6-only. `listen` is encrypted by
+default. `hub` and `alt` accept IPv4, IPv6, and hostnames; botnet links use SSL
+by default, so no `ssl:` prefix is required:
+
+```
+myipv6 ::
+listen 9000
+hub ::1 9000 botpassword
+hub hub.example.net 9000 botpassword
+alt ::1 9000
+```
+
+Leaf fallback uses the primary `hub` first, then learned slave endpoints, then
+the hub as the last resort. When the primary slave is reachable again, the leaf
+switches back automatically.
+
+Modules
+-------
+
+`modules/otp-sec.cpp` provides authenticator-based IRC OP flows.
+
+QR/TOTP OP:
+
+```
+.qrcode enable
+.qrcode set <handle> enable
+/msg BotNick qr-setup
+/msg BotNick qr-op 123456
+```
+
+The module does not grant privileges by itself. After a valid code it calls the
+shared OP path, so channel/global flags are checked by the same logic used by
+the classic OP command.
+
+Email OTP OP:
+
+```
+.email-otp enable
+.email-otp set smtp-host smtp.example.com
+.email-otp set smtp-port 587
+.email-otp set smtp-security starttls
+.email-otp user <handle> set-email user@example.com
+.email-otp user <handle> enable
+/msg BotNick email-otp
+/msg BotNick op-email 123456
+```
+
+OTP values are single-use, expire, and are rate-limited. SMTP runs in a worker
+thread and does not call IRC or userlist APIs directly.
+
+`modules/fast-login.cpp` provides TOTP partyline login:
+
+```
+.fastlogin enable
+.fastlogin <handle> enable
+/msg BotNick owner-setup
+```
+
+After QR setup, the user can connect to the partyline and log in with one line:
+
+```
+<handle> <6-digit authenticator code>
+```
+
+FastLogin bypasses the normal ownerpass/login/password prompts only for handles
+explicitly enabled by an owner with the required privileges. It enforces `+p`,
+per-IP failure counters, temporary lockouts, and TOTP replay protection.
+
+More details are in `QR-OTP.md`, `EMAIL-OTP.md`, and `FAST-LOGIN.md`.

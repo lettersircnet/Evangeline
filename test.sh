@@ -1,0 +1,1 @@
+valgrind --tool=memcheck --leak-check=full bin/evangeline -d -T $*
